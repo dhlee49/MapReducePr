@@ -1,22 +1,7 @@
 The main goal is that we do not save entire file in memory.
 In mapper, we can create new variable 'size' representing total # of n-grams.
-Every time we print pair word\t1, we simply do size += 1
-then prints the size in form 0\tsize before termination
-(For simplicity I wrote 0 but any character that goes before [a-zA-Z0-9_] will make this work
-as in case of having 0 as actual input word 0 will not work.)
-Then before sort phase, we obtain
-word1 1
-word2 1
-word3 1
-.
-.
-.
-.
-.
-a size
-
-In sort phase, a size (where a should be any character that comes before [a-zA-Z0-9_] for sort)
-will be the first one to be read, and such that when we run reduce,
-we simply read first line before loop and save the size
-For every print, we print "word count/size" instead of "word count"
-which will give us frequency.
+2 choices for us.
+1) Write size variable into a file so that reducers can access (simply open file and read that)
+2) Use zookeeper to keep size as configuration info(More versatile, but require use of other application)
+2*) Zookeeper is centralized service that can be used in other distributed application for keeping
+  configuration information(in this case size!),naming, synchronizing,and group service. 

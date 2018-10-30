@@ -7,19 +7,7 @@ import re
 import csv
 #argparse for input specification
 import argparse
-def tokenize(lyric):
-    """
-    in: lyric as a sinlge string
-    apply()
-    return: list of words of the lyric
-    """
-    #prefix r makes escape char to be interpreted non literally
-    #replace all words that's not consist of alphabet + nums [a-zA-Z0-9]
-    # and words that ends with alph+nums with ''(empty string)
-    lyric = re.sub(r'^\W+|\W+$','',lyric)
-    #make lyric string into list of words
-    words = re.split(r'\W+',lyric)
-    return words
+from umapper import tokenize
 def idmap(list_words,id):
     """
     in: list of words in lyrics, id : integer
@@ -35,13 +23,10 @@ def main():
     and call map function for each lyric parsing as list of words
     """
     #open file as read-only binary file
-    parser = argparse.ArgumentParser(description = 'Unigram mammper :Takes datafile.csv(that resides in same directory)')
-    parser.add_argument("data",type = argparse.FileType('r'), help = 'csvfile that has format {"artist","song(title)","link","text"}')
-    args = parser.parse_args()
-    songdata = csv.DictReader(args.data)
     cnt = 1
+    songdata = csv.reader(sys.stdin,delimiter =',',quotechar='"')
     for line in songdata:
-        idmap(tokenize(line['text']),cnt)
+        idmap(tokenize(line[3]),cnt)
         cnt += 1
 if __name__ == "__main__":
     main()

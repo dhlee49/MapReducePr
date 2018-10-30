@@ -27,12 +27,9 @@ def main():
     and call map function for each lyric parsing as list of words
     """
     #open file as read-only binary file
-    parser = argparse.ArgumentParser(description = 'Bigram mapper : Takes datafile.csv(that resides in same directory)')
-    parser.add_argument("data",type = argparse.FileType('r'), help = 'csvfile that has format {"artist","song(title)","link","text"}')
-    args = parser.parse_args()
-    songdata = csv.DictReader(args.data)
+    songdata = csv.reader(sys.stdin,delimiter =',',quotechar='"')
     for line in songdata:
-        bigrammap(tokenize(line['text']))
+        bigrammap(tokenize(line[3]))
 
 if __name__ == "__main__":
     main()

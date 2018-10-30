@@ -29,18 +29,20 @@ def skipsupport(list,s,i,k,n):
     out: None
     """
 
-    for j in range(1,k+2):
-        #append next word only if we do not overflow the list
-        if i + j < len(list):
-            if n > 1:
-                #we have more than 1 grams to append
-                #make recursive call to all 0 ~ k skipgrams
-                # new s = prev_word + space + new word
+
+    if n > 0:
+        #we have more than 1 grams to append
+    #make recursive call to all 0 ~ k skipgrams
+    # new s = prev_word + space + new word
+        for j in range(1,k+2):
+            if i + j < len(list):
+                #append next word only if the index i+j is acceptable for the list
                 skipsupport(list,s + " " + list[i+j],i + j, k, n-1)
-            else: #we have appended n-1 words, next word should be printed
-                print("%s\t%d" % (s + " " + list[i+j],1))
-        else:
-            break
+            else:
+                #i+ any value >= j are invalid index so break the loop
+                break
+    else: #we have appended n words, should be printed
+        print("%s\t%d" % (s,1))
     return
 def main():
     """
@@ -48,12 +50,9 @@ def main():
     and call map function for each lyric parsing as list of words
     """
     #open file as read-only binary file
-    parser = argparse.ArgumentParser(description = 'Unigram mammper :Takes datafile.csv(that resides in same directory)')
-    parser.add_argument("data",type = argparse.FileType('r'), help = 'csvfile that has format {"artist","song(title)","link","text"}')
-    args = parser.parse_args()
-    songdata = csv.DictReader(args.data)
+    songdata = csv.reader(sys.stdin,delimiter =',',quotechar='"')
     for line in songdata:
-        skipgrammap(tokenize(line['text']),1,2)
+        skipgrammap(tokenize(line[3]),1,2)
 
 if __name__ == "__main__":
     main()
