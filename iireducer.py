@@ -27,8 +27,7 @@ def main():
             word = curr_word
             s = curr_cnt
     if curr_word == word:
-        print("{0:10s}\t{1:10s}".format(curr_word.strip(), s.strip()))
+        print("{0:10s}\t{1:10s}".format(curr_word, s))
     return
 if __name__ == "__main__":
     main()
-#sort -b -k1,1 -k2,2n

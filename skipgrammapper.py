@@ -1,35 +1,26 @@
 #!/usr/bin/env python3
 #sys for output
 import sys
-#re to tokenize/process words
-import re
-#csv for reading the csv file
-import csv
-#argparse for input specification
-import argparse
-from umapper import tokenize
-def skipgrammap(list_words,k,n):
+def skipgrammap(lyric,k,n):
     """
-    in: list of words in lyrics, k skip and n grams
+    in: tuple of words in lyrics, k skip and n grams
     print all 0-k skip n grams
     out: none
     """
-    size = len(list_words)
+    size = len(lyric)
     #iterate over all words
     for i in range(0,size):
         if i + n > size: #cannot build more n grams exit the print loop
             break
-        skipsupport(list_words,list_words[i],i,k,n-1)
+        skipsupport(lyric,lyric[i],i,k,n-1)
     return
 def skipsupport(list,s,i,k,n):
     """
-    in: list of words, incomplete skipgram s, position i, k skips, n words left to append
+    in: tuple of words, incomplete skipgram s, position i, k skips, n words left to append
     print the word when n = 1(when you append the word to make complete n gram)
     or make recursive call where n > new n , i < new i
     out: None
     """
-
-
     if n > 0:
         #we have more than 1 grams to append
     #make recursive call to all 0 ~ k skipgrams
@@ -44,15 +35,24 @@ def skipsupport(list,s,i,k,n):
     else: #we have appended n words, should be printed
         print("%s\t%d" % (s,1))
     return
+def gen_input(input_file):
+    """
+    in: input file
+    out: generator object for that input file
+    """
+    for line in input_file:
+        yield line.split()
+
 def main():
     """
-    Read inputfile songdata.csv and read each line using csvReader
-    and call map function for each lyric parsing as list of words
+    Read input from stdin and toss it to gen_input
+    to obtain generator for stdin
+    then apply unigram to each line
     """
-    #open file as read-only binary file
-    songdata = csv.reader(sys.stdin,delimiter =',',quotechar='"')
-    for line in songdata:
-        skipgrammap(tokenize(line[3]),1,2)
-
+    input_generator = gen_input(sys.stdin)
+    for line in input_generator:
+        #ignore first song id
+        line = line[1:]
+        skipgrammap(line,1,2)
 if __name__ == "__main__":
     main()

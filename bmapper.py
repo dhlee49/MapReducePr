@@ -1,35 +1,36 @@
 #!/usr/bin/env python3
 #sys for output
 import sys
-#re to tokenize/process words
-import re
-#csv for reading the csv file
-import csv
-#argparse for input specification
-import argparse
-from umapper import tokenize
-
-def bigrammap(list_words):
+def gen_input(input_file):
     """
-    in: list of words in lyrics
+    in: input file
+    out: generator object for that input file
+    """
+    for line in input_file:
+        yield line.split()
+def bigrammap(lyric):
+    """
+    in: tuple for all words in lyric
     prints all bigrams to sys.stdout
     out: none
     """
     prev = None
-    for word in list_words:
+    for word in lyric:
         if prev is not None:
             print("%s %s\t%d" % (prev,word,1))
         prev = word
     return
 def main():
     """
-    Read inputfile songdata.csv and read each line using csvReader
-    and call map function for each lyric parsing as list of words
+    Read input from stdin and toss it to gen_input
+    to obtain generator for stdin
+    then apply biigram to each line
     """
-    #open file as read-only binary file
-    songdata = csv.reader(sys.stdin,delimiter =',',quotechar='"')
-    for line in songdata:
-        bigrammap(tokenize(line[3]))
+    input_generator = gen_input(sys.stdin)
+    for line in input_generator:
+        #ignore first song id
+        line = line[1:]
+        bigrammap(line)
 
 if __name__ == "__main__":
     main()

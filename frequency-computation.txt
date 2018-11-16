@@ -1,7 +1,0 @@
-The main goal is that we do not save entire file in memory.
-In mapper, we can create new variable 'size' representing total # of n-grams.
-2 choices for us.
-1) Write size variable into a file so that reducers can access (simply open file and read that)
-2) Use zookeeper to keep size as configuration info(More versatile, but require use of other application)
-2*) Zookeeper is centralized service that can be used in other distributed application for keeping
-  configuration information(in this case size!),naming, synchronizing,and group service. 
